@@ -1,0 +1,7 @@
+DATA,BENEFICIÁRIO,CATEGORIA,VALOR GASTO,OBSERVAÇÕES
+01/01/2025,Exemplo,Alimentação,50.00,Compras no mercado
+02/01/2025,Exemplo,Transporte,30.00,Combustível
+03/01/2025,Exemplo,Moradia,500.00,Aluguel
+,,,=SUM(D2:D1000),
+,,,TOTAL DE GASTOS,
+,SALDO FINAL:,=10000-D5,
