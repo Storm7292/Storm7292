@@ -44,6 +44,63 @@
             opacity: 0.9;
         }
 
+        .compartilhar-section {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .compartilhar-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .link-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .link-box {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            padding: 12px 15px;
+            font-size: 0.95em;
+            word-break: break-all;
+            flex: 1;
+            min-width: 250px;
+            max-width: 500px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .btn-copiar {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .btn-copiar:hover {
+            background: #5568d3;
+        }
+
+        .mensagem-copiada {
+            color: #27ae60;
+            font-weight: bold;
+            display: none;
+            margin-top: 10px;
+        }
+
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -335,11 +392,31 @@
             .tabela-gastos th, .tabela-gastos td {
                 padding: 10px;
             }
+
+            .link-container {
+                flex-direction: column;
+            }
+
+            .link-box {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="compartilhar-section">
+            <h3>🔗 Compartilhe o Link</h3>
+            <div class="link-container">
+                <div class="link-box" id="linkBox">
+                    https://raw.githubusercontent.com/Storm7292/Storm7292/main/index.html
+                </div>
+                <button class="btn-copiar" onclick="copiarLink()">📋 Copiar Link</button>
+            </div>
+            <div class="mensagem-copiada" id="mensagemCopiada">✅ Link copiado para a área de transferência!</div>
+            <p style="color: #666; margin-top: 10px; font-size: 0.9em;">Compartilhe este link com seus amigos para que eles acessem o site!</p>
+        </div>
+
         <header>
             <h1>💰 Controle de Gastos Mensais</h1>
             <p>Acompanhe todos os seus gastos e saiba quanto resta no final do mês</p>
@@ -452,6 +529,20 @@
     <script>
         let gastos = [];
         let saldoInicial = 5000;
+
+        // Função para copiar link
+        function copiarLink() {
+            const link = document.getElementById('linkBox').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                const mensagem = document.getElementById('mensagemCopiada');
+                mensagem.style.display = 'block';
+                setTimeout(() => {
+                    mensagem.style.display = 'none';
+                }, 3000);
+            }).catch(() => {
+                alert('Link: ' + link);
+            });
+        }
 
         // Função para formatar valores em Real (1.234,56)
         function formatarValor(valor) {
