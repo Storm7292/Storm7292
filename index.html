@@ -402,11 +402,11 @@
                 <div class="cards-resumo">
                     <div class="card">
                         <h3>Total de Gastos</h3>
-                        <p id="totalGastos" class="valor-grande">R$ 0.00</p>
+                        <p id="totalGastos" class="valor-grande">R$ 0,00</p>
                     </div>
                     <div class="card">
                         <h3>Saldo Restante</h3>
-                        <p id="saldoRestante" class="valor-grande saldo-positivo">R$ 5000.00</p>
+                        <p id="saldoRestante" class="valor-grande saldo-positivo">R$ 5.000,00</p>
                     </div>
                 </div>
             </div>
@@ -452,6 +452,11 @@
     <script>
         let gastos = [];
         let saldoInicial = 5000;
+
+        // Função para formatar valores em Real (1.234,56)
+        function formatarValor(valor) {
+            return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
 
         // Carregar dados do localStorage
         function carregarDados() {
@@ -539,7 +544,7 @@
                         <td>${data}</td>
                         <td>${gasto.beneficiario}</td>
                         <td>${gasto.categoria}</td>
-                        <td>R$ ${gasto.valor.toFixed(2)}</td>
+                        <td>R$ ${formatarValor(gasto.valor)}</td>
                         <td>${gasto.observacoes}</td>
                         <td><button class="btn-deletar" onclick="deletarGasto(${gasto.id})">Deletar</button></td>
                     </tr>
@@ -568,7 +573,7 @@
                 const html = `
                     <div class="categoria-item">
                         <div class="categoria-nome">${categoria}</div>
-                        <div class="categoria-valor">R$ ${valor.toFixed(2)}</div>
+                        <div class="categoria-valor">R$ ${formatarValor(valor)}</div>
                         <div class="categoria-barra">
                             <div class="categoria-preenchimento" style="width: ${percentual}%"></div>
                         </div>
@@ -608,10 +613,10 @@
             const totalGastos = calcularTotalGastos();
             const saldoRestante = calcularSaldoRestante();
 
-            document.getElementById('totalGastos').textContent = `R$ ${totalGastos.toFixed(2)}`;
+            document.getElementById('totalGastos').textContent = `R$ ${formatarValor(totalGastos)}`;
             
             const elementoSaldo = document.getElementById('saldoRestante');
-            elementoSaldo.textContent = `R$ ${saldoRestante.toFixed(2)}`;
+            elementoSaldo.textContent = `R$ ${formatarValor(saldoRestante)}`;
             
             if (saldoRestante < 0) {
                 elementoSaldo.classList.remove('saldo-positivo');
