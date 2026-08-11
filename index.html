@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Gastos Mensais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn-adicionar {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-adicionar:hover {
+            transform: translateY(-2px);
+        }
+
+        .summary-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .summary-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .input-saldo {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-saldo input {
+            flex: 1;
+        }
+
+        .btn-pequeno {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-pequeno:hover {
+            background: #5568d3;
+        }
+
+        .cards-resumo {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        .valor-grande {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .saldo-positivo {
+            color: #27ae60;
+        }
+
+        .saldo-negativo {
+            color: #e74c3c;
+        }
+
+        .categorias-section {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .categorias-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .categorias-graficos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .categoria-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .categoria-nome {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .categoria-valor {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .categoria-barra {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .categoria-preenchimento {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        }
+
+        .gastos-section {
+            padding: 40px;
+        }
+
+        .header-gastos {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-gastos h2 {
+            color: #333;
+        }
+
+        .btn-limpar {
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-limpar:hover {
+            background: #c0392b;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filtros input {
+            flex: 1;
+        }
+
+        .tabela-gastos {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .tabela-gastos thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tabela-gastos th {
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .tabela-gastos td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tabela-gastos tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-deletar {
+            padding: 8px 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .btn-deletar:hover {
+            background: #c0392b;
+        }
+
+        .mensagem-vazio {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .tabela-gastos {
+                font-size: 0.9em;
+            }
+
+            .tabela-gastos th, .tabela-gastos td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Controle de Gastos Mensais</h1>
+            <p>Acompanhe todos os seus gastos e saiba quanto resta no final do mês</p>
+        </header>
+
+        <div class="main-content">
+            <div class="form-section">
+                <h2>Adicionar Gasto</h2>
+                <form id="formGasto">
+                    <div class="form-group">
+                        <label for="data">Data:</label>
+                        <input type="date" id="data" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="beneficiario">Beneficiário (Quem recebeu):</label>
+                        <input type="text" id="beneficiario" placeholder="Ex: Supermercado, Aluguel, etc..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoria">Categoria:</label>
+                        <select id="categoria" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="Alimentação">Alimentação</option>
+                            <option value="Transporte">Transporte</option>
+                            <option value="Moradia">Moradia</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="Educação">Educação</option>
+                            <option value="Entretenimento">Entretenimento</option>
+                            <option value="Contas">Contas (Água, Luz, etc)</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valor">Valor Gasto (R$):</label>
+                        <input type="number" id="valor" placeholder="0.00" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="observacoes">Observações:</label>
+                        <textarea id="observacoes" placeholder="Detalhes adicionais..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-adicionar">Adicionar Gasto</button>
+                </form>
+            </div>
+
+            <div class="summary-section">
+                <h2>Resumo do Mês</h2>
+                
+                <div class="input-saldo">
+                    <label for="saldoInicial" style="margin-bottom: 0; width: 100%;">Saldo Inicial (R$):</label>
+                </div>
+                <div class="input-saldo" style="margin-bottom: 20px;">
+                    <input type="number" id="saldoInicial" value="5000" step="0.01">
+                    <button onclick="atualizarSaldo()" class="btn-pequeno">Atualizar</button>
+                </div>
+
+                <div class="cards-resumo">
+                    <div class="card">
+                        <h3>Total de Gastos</h3>
+                        <p id="totalGastos" class="valor-grande">R$ 0.00</p>
+                    </div>
+                    <div class="card">
+                        <h3>Saldo Restante</h3>
+                        <p id="saldoRestante" class="valor-grande saldo-positivo">R$ 5000.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="categorias-section">
+            <h2>📊 Gastos por Categoria</h2>
+            <div id="categoriasGraficos" class="categorias-graficos">
+                <!-- Preenchido dinamicamente -->
+            </div>
+        </div>
+
+        <div class="gastos-section">
+            <div class="header-gastos">
+                <h2>📋 Lista de Gastos</h2>
+                <button onclick="limparTodos()" class="btn-limpar">Limpar Tudo</button>
+            </div>
+            
+            <div class="filtros">
+                <input type="text" id="filtroCategoria" placeholder="Filtrar por categoria..." oninput="filtrarGastos()">
+                <input type="text" id="filtroBeneficiario" placeholder="Filtrar por beneficiário..." oninput="filtrarGastos()">
+            </div>
+
+            <table id="tabelaGastos" class="tabela-gastos">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Beneficiário</th>
+                        <th>Categoria</th>
+                        <th>Valor (R$)</th>
+                        <th>Observações</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabela">
+                    <!-- Preenchido dinamicamente -->
+                </tbody>
+            </table>
+            <p id="mensagemVazio" class="mensagem-vazio">Nenhum gasto adicionado ainda. Comece a adicionar!</p>
+        </div>
+    </div>
+
+    <script>
+        let gastos = [];
+        let saldoInicial = 5000;
+
+        // Carregar dados do localStorage
+        function carregarDados() {
+            const dados = localStorage.getItem('gastos');
+            const saldo = localStorage.getItem('saldoInicial');
+            if (dados) {
+                gastos = JSON.parse(dados);
+            }
+            if (saldo) {
+                saldoInicial = parseFloat(saldo);
+                document.getElementById('saldoInicial').value = saldoInicial;
+            }
+        }
+
+        // Salvar dados no localStorage
+        function salvarDados() {
+            localStorage.setItem('gastos', JSON.stringify(gastos));
+            localStorage.setItem('saldoInicial', saldoInicial.toString());
+        }
+
+        // Adicionar gasto
+        document.getElementById('formGasto').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const gasto = {
+                id: Date.now(),
+                data: document.getElementById('data').value,
+                beneficiario: document.getElementById('beneficiario').value,
+                categoria: document.getElementById('categoria').value,
+                valor: parseFloat(document.getElementById('valor').value),
+                observacoes: document.getElementById('observacoes').value
+            };
+
+            gastos.push(gasto);
+            salvarDados();
+            atualizarTela();
+            this.reset();
+        });
+
+        // Atualizar saldo
+        function atualizarSaldo() {
+            saldoInicial = parseFloat(document.getElementById('saldoInicial').value);
+            salvarDados();
+            atualizarTela();
+        }
+
+        // Deletar gasto
+        function deletarGasto(id) {
+            gastos = gastos.filter(g => g.id !== id);
+            salvarDados();
+            atualizarTela();
+        }
+
+        // Calcular total de gastos
+        function calcularTotalGastos() {
+            return gastos.reduce((total, gasto) => total + gasto.valor, 0);
+        }
+
+        // Calcular saldo restante
+        function calcularSaldoRestante() {
+            return saldoInicial - calcularTotalGastos();
+        }
+
+        // Atualizar tabela de gastos
+        function atualizarTabelaGastos() {
+            const corpo = document.getElementById('corpoTabela');
+            const mensagem = document.getElementById('mensagemVazio');
+            const tabela = document.getElementById('tabelaGastos');
+
+            corpo.innerHTML = '';
+
+            if (gastos.length === 0) {
+                mensagem.style.display = 'block';
+                tabela.style.display = 'none';
+                return;
+            }
+
+            mensagem.style.display = 'none';
+            tabela.style.display = 'table';
+
+            gastos.forEach(gasto => {
+                const data = new Date(gasto.data + 'T00:00:00').toLocaleDateString('pt-BR');
+                const row = `
+                    <tr>
+                        <td>${data}</td>
+                        <td>${gasto.beneficiario}</td>
+                        <td>${gasto.categoria}</td>
+                        <td>R$ ${gasto.valor.toFixed(2)}</td>
+                        <td>${gasto.observacoes}</td>
+                        <td><button class="btn-deletar" onclick="deletarGasto(${gasto.id})">Deletar</button></td>
+                    </tr>
+                `;
+                corpo.innerHTML += row;
+            });
+        }
+
+        // Atualizar gastos por categoria
+        function atualizarCategorias() {
+            const categorias = {};
+            gastos.forEach(gasto => {
+                if (!categorias[gasto.categoria]) {
+                    categorias[gasto.categoria] = 0;
+                }
+                categorias[gasto.categoria] += gasto.valor;
+            });
+
+            const container = document.getElementById('categoriasGraficos');
+            container.innerHTML = '';
+
+            const totalGastos = calcularTotalGastos();
+
+            Object.entries(categorias).forEach(([categoria, valor]) => {
+                const percentual = totalGastos > 0 ? (valor / totalGastos) * 100 : 0;
+                const html = `
+                    <div class="categoria-item">
+                        <div class="categoria-nome">${categoria}</div>
+                        <div class="categoria-valor">R$ ${valor.toFixed(2)}</div>
+                        <div class="categoria-barra">
+                            <div class="categoria-preenchimento" style="width: ${percentual}%"></div>
+                        </div>
+                        <div style="font-size: 0.85em; color: #999; margin-top: 5px;">${percentual.toFixed(1)}% do total</div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // Filtrar gastos
+        function filtrarGastos() {
+            const filtroCategoria = document.getElementById('filtroCategoria').value.toLowerCase();
+            const filtroBeneficiario = document.getElementById('filtroBeneficiario').value.toLowerCase();
+            const linhas = document.querySelectorAll('#corpoTabela tr');
+
+            linhas.forEach(linha => {
+                const categoria = linha.cells[2].textContent.toLowerCase();
+                const beneficiario = linha.cells[1].textContent.toLowerCase();
+
+                const mostra = categoria.includes(filtroCategoria) && beneficiario.includes(filtroBeneficiario);
+                linha.style.display = mostra ? '' : 'none';
+            });
+        }
+
+        // Limpar todos os gastos
+        function limparTodos() {
+            if (confirm('Tem certeza que deseja limpar todos os gastos?')) {
+                gastos = [];
+                salvarDados();
+                atualizarTela();
+            }
+        }
+
+        // Atualizar tela completa
+        function atualizarTela() {
+            const totalGastos = calcularTotalGastos();
+            const saldoRestante = calcularSaldoRestante();
+
+            document.getElementById('totalGastos').textContent = `R$ ${totalGastos.toFixed(2)}`;
+            
+            const elementoSaldo = document.getElementById('saldoRestante');
+            elementoSaldo.textContent = `R$ ${saldoRestante.toFixed(2)}`;
+            
+            if (saldoRestante < 0) {
+                elementoSaldo.classList.remove('saldo-positivo');
+                elementoSaldo.classList.add('saldo-negativo');
+            } else {
+                elementoSaldo.classList.remove('saldo-negativo');
+                elementoSaldo.classList.add('saldo-positivo');
+            }
+
+            atualizarTabelaGastos();
+            atualizarCategorias();
+        }
+
+        // Inicializar
+        carregarDados();
+        atualizarTela();
+        document.getElementById('data').valueAsDate = new Date();
+    </script>
+</body>
+</html>
