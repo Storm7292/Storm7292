@@ -406,15 +406,15 @@
 <body>
     <div class="container">
         <div class="compartilhar-section">
-            <h3>🔗 Compartilhe o Link</h3>
+            <h3>🔗 Compartilhe este Site</h3>
             <div class="link-container">
                 <div class="link-box" id="linkBox">
-                    https://raw.githubusercontent.com/Storm7292/Storm7292/main/index.html
+                    Abra no navegador: https://Storm7292.github.io/gastos/
                 </div>
                 <button class="btn-copiar" onclick="copiarLink()">📋 Copiar Link</button>
             </div>
             <div class="mensagem-copiada" id="mensagemCopiada">✅ Link copiado para a área de transferência!</div>
-            <p style="color: #666; margin-top: 10px; font-size: 0.9em;">Compartilhe este link com seus amigos para que eles acessem o site!</p>
+            <p style="color: #666; margin-top: 10px; font-size: 0.9em;">Compartilhe este link com seus amigos! Cada pessoa tem seus próprios dados salvos.</p>
         </div>
 
         <header>
@@ -532,7 +532,7 @@
 
         // Função para copiar link
         function copiarLink() {
-            const link = document.getElementById('linkBox').textContent;
+            const link = "https://Storm7292.github.io/gastos/";
             navigator.clipboard.writeText(link).then(() => {
                 const mensagem = document.getElementById('mensagemCopiada');
                 mensagem.style.display = 'block';
